@@ -32,7 +32,10 @@ and for verify: `2/3 claims supported` — the invented
 "99 percent faster" claim is flagged `unsupported` with overlap 0.125.
 
 PDF input is optional: `pip install "chunkcite[pdf]"`, then chunk a
-`.pdf` the same way; page numbers are kept on each chunk.
+`.pdf` the same way; page numbers are kept on each chunk and surfaced
+by `chunkcite audit` (`pages`, `chunks_by_page`). DOCX works the same
+way with `pip install "chunkcite[docx]"` — headings and tables are
+preserved in document order.
 
 ## What it does
 
@@ -47,7 +50,12 @@ PDF input is optional: `pip install "chunkcite[pdf]"`, then chunk a
   standard-library BM25-style scorer. No embeddings, no judge model,
   so the numbers reproduce on any machine.
 - `chunkcite audit` — flags orphan chunks, oversized chunks, and
-  duplicate text before you index 10,000 documents.
+  duplicate text before you index 10,000 documents, and reports
+  which pages your chunks came from.
+- Optional Gemini / Vertex adapter (`chunkcite.adapters.gemini`,
+  not imported by the core) — feed chunks to your own model
+  callable, parse its `[chunk_id]` citations, and verify every claim
+  offline. No Google dependency, no API key read by this code.
 
 ## Benchmarks I actually ran
 
@@ -104,9 +112,9 @@ All example documents in this repo are synthetic.
 ## Roadmap
 
 - [ ] Larger benchmark on real public documents (not just the synthetic guide)
-- [ ] `.docx` input (see good-first-issue draft)
-- [ ] `--threshold` flag on `verify`
-- [ ] Optional Gemini / Vertex adapter — outside the offline core, never required for tests
+- [x] `.docx` input (`chunkcite[docx]`)
+- [ ] `--threshold` flag on `verify` — in progress with a community contributor (see issue #3)
+- [x] Optional Gemini / Vertex adapter — outside the offline core, never required for tests
 - [ ] pgvector export: chunk JSONL → SQL with `vector` column
 
 ## License

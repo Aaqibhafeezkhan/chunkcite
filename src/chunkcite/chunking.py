@@ -149,6 +149,40 @@ def chunk_file(path: str | Path, max_chars: int = 1200) -> list[Chunk]:
                 chunk.page = page_no
                 chunks.append(chunk)
         return chunks
+    if p.suffix.lower() == ".docx":
+        try:
+            import docx
+            from docx.oxml.ns import qn
+        except ImportError as exc:  # pragma: no cover
+            raise ImportError(
+                "DOCX support needs the docx extra: pip install 'chunkcite[docx]'"
+            ) from exc
+        document = docx.Document(str(p))
+        blocks: list[str] = []
+        for child in document.element.body:
+            if child.tag.endswith("}p"):
+                paragraph = docx.text.paragraph.Paragraph(child, document)
+                text = paragraph.text.strip()
+                if not text:
+                    continue
+                style = paragraph.style.name if paragraph.style else ""
+                if style.startswith("Heading "):
+                    try:
+                        level = int(style.split()[-1])
+                    except ValueError:
+                        level = 1
+                    blocks.append(f"{'#' * level} {text}")
+                else:
+                    blocks.append(text)
+            elif child.tag.endswith("}tbl"):
+                table = docx.table.Table(child, document)
+                rows = []
+                for row in table.rows:
+                    cells = [cell.text.strip() for cell in row.cells]
+                    rows.append("| " + " | ".join(cells) + " |")
+                if rows:
+                    blocks.append("\n".join(rows))
+        return chunk_text("\n\n".join(blocks), source, max_chars=max_chars)
     return chunk_text(p.read_text(encoding="utf-8"), source, max_chars=max_chars)
 
 
@@ -165,10 +199,19 @@ def audit(chunks: list[Chunk]) -> dict:
             issues.append(f"chunk {chunk.id}: single-line table, may be truncated")
         seen[chunk.text] = seen.get(chunk.text, 0) + 1
     duplicates = sum(1 for v in seen.values() if v > 1)
+    pages = sorted({c.page for c in chunks if c.page is not None})
+    chunks_by_page: dict[str, int] = {}
+    for chunk in chunks:
+        if chunk.page is not None:
+            key = str(chunk.page)
+            chunks_by_page[key] = chunks_by_page.get(key, 0) + 1
     return {
         "chunks": len(chunks),
         "tables": sum(1 for c in chunks if c.kind == "table"),
         "orphans": sum(1 for c in chunks if not c.heading_path),
         "duplicate_texts": duplicates,
+        "pages": pages,
+        "chunks_by_page": chunks_by_page,
+        "chunks_without_page": sum(1 for c in chunks if c.page is None),
         "issues": issues,
     }

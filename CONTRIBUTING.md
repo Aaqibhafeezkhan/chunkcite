@@ -20,5 +20,7 @@ python -m pytest -q
 
 ## Good first issues
 
-See `.github/ISSUES_DRAFT/` — these are prepared to be opened as
-"good first issue" issues after the first release.
+See the open issues labelled `good first issue` on GitHub.
+If one is already assigned, please pick another — and if you want to
+work on one, comment first so it can be assigned to you. PRs are
+reviewed promptly, CI must pass, and no contribution is auto-merged.

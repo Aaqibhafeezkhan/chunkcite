@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "chunkcite"
-version = "0.1.0"
+version = "0.2.0"
 description = "Structure-aware chunking for RAG, with verifiable citations and a no-LLM retrieval eval."
 readme = "README.md"
 license = { text = "MIT" }
@@ -20,6 +20,7 @@ classifiers = [
 
 [project.optional-dependencies]
 pdf = ["pypdf>=4"]
+docx = ["python-docx>=1"]
 dev = ["pytest>=8"]
 
 [project.scripts]
