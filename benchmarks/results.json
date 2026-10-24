@@ -1,0 +1,25 @@
+{
+  "corpus": "examples/docs/rag-guide.md (synthetic, shipped in repo)",
+  "questions": 4,
+  "note": "Recall is tied on this tiny 4-question set; the difference is structural, not retrieval luck. See with_heading_path and standalone_table_chunk.",
+  "chunkcite_structure_aware": {
+    "cases": 4,
+    "k": 5,
+    "recall@5": 1.0,
+    "mrr": 1.0,
+    "chunks": 5,
+    "with_heading_path": 5,
+    "standalone_table_chunk": true,
+    "chunks_ending_mid_sentence": 0
+  },
+  "fixed_500char_baseline": {
+    "cases": 4,
+    "k": 5,
+    "recall@5": 1.0,
+    "mrr": 1.0,
+    "chunks": 2,
+    "with_heading_path": 0,
+    "standalone_table_chunk": false,
+    "chunks_ending_mid_sentence": 1
+  }
+}

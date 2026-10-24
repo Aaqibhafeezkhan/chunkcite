@@ -1,0 +1,4 @@
+{"question": "How should documents be split?", "expected_chunk_ids": ["d25a82cbe8e6"]}
+{"question": "What breaks when a table is split?", "expected_chunk_ids": ["c2a50136d1af"]}
+{"question": "What does pgvector add to Postgres?", "expected_chunk_ids": ["42eab4ea4fc7"]}
+{"question": "What must happen when switching embedding models?", "expected_chunk_ids": ["42eab4ea4fc7"]}

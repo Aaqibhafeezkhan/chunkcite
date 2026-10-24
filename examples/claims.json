@@ -1,0 +1,14 @@
+[
+  {
+    "text": "Split documents at headings, never mid-sentence.",
+    "cite": "d25a82cbe8e6"
+  },
+  {
+    "text": "pgvector adds vector similarity search to Postgres with HNSW and IVFFlat indexes.",
+    "cite": "42eab4ea4fc7"
+  },
+  {
+    "text": "pgvector is 99 percent faster than all other databases.",
+    "cite": "42eab4ea4fc7"
+  }
+]
