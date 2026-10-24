@@ -1,5 +1,7 @@
 # chunkcite
 
+[![CI](https://github.com/hydope/chunkcite/actions/workflows/ci.yml/badge.svg)](https://github.com/hydope/chunkcite/actions/workflows/ci.yml)
+
 **Structure-aware chunking for RAG, with citations you can actually verify — no LLM judge, no API key, no network.**
 
 Most RAG answers cite chunks that were split mid-sentence, with tables
