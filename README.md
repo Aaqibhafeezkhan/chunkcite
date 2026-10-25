@@ -19,7 +19,7 @@ python3 -m venv .venv && . .venv/bin/activate
 pip install -e .
 chunkcite chunk examples/docs/rag-guide.md --out chunks.jsonl
 chunkcite eval --chunks chunks.jsonl --golden examples/golden.jsonl
-chunkcite verify --chunks chunks.jsonl --claims examples/claims.json
+chunkcite verify --chunks chunks.jsonl --claims examples/claims.json --threshold 0.75
 ```
 
 Expected output on the shipped synthetic example:
@@ -43,7 +43,7 @@ preserved in document order.
   ids (`sha1(source + locator + text)[:12]`), heading path, line range,
   page (PDF), and kind (`paragraph` / `table`).
 - `chunkcite verify` — a claim is `supported` only if its cited chunk
-  contains it verbatim or with token overlap ≥ 0.6. Unknown chunk ids
+  contains it verbatim or with token overlap ≥ the configured threshold (default 0.6). Set `--threshold` on `chunkcite verify` to tune paraphrase strictness. Unknown chunk ids
   are `unresolved`, not silently passed. Exit code 1 if any claim fails,
   so it can gate CI.
 - `chunkcite eval` — recall@k and MRR over a golden set, using a
@@ -113,7 +113,7 @@ All example documents in this repo are synthetic.
 
 - [ ] Larger benchmark on real public documents (not just the synthetic guide)
 - [x] `.docx` input (`chunkcite[docx]`)
-- [ ] `--threshold` flag on `verify` — in progress with a community contributor (see issue #3)
+- [x] `--threshold` flag on `verify` (see issue #3)
 - [x] Optional Gemini / Vertex adapter — outside the offline core, never required for tests
 - [ ] pgvector export: chunk JSONL → SQL with `vector` column
 

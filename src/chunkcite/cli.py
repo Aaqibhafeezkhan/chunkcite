@@ -32,6 +32,12 @@ def main(argv: list[str] | None = None) -> int:
     p = sub.add_parser("verify", help="Verify claims against cited chunks")
     p.add_argument("--chunks", required=True, help="JSONL produced by chunkcite chunk")
     p.add_argument("--claims", required=True, help="JSON file: list of {text, cite}")
+    p.add_argument(
+        "--threshold",
+        type=float,
+        default=0.6,
+        help="Minimum token overlap required to support a paraphrase (default: 0.6)",
+    )
 
     p = sub.add_parser("eval", help="Recall@k / MRR over a golden set, no LLM")
     p.add_argument("--chunks", required=True)
@@ -65,7 +71,9 @@ def main(argv: list[str] | None = None) -> int:
 
     if args.command == "verify":
         claims = _load_json(Path(args.claims))
-        results = [r.to_dict() for r in verify_claims(claims, chunks)]
+        results = [
+            r.to_dict() for r in verify_claims(claims, chunks, threshold=args.threshold)
+        ]
         print(json.dumps(results, indent=2))
         supported = sum(1 for r in results if r["verdict"] == "supported")
         print(f"{supported}/{len(results)} claims supported", file=sys.stderr)
